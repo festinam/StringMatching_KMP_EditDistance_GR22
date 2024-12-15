@@ -104,6 +104,20 @@ def hybrid_string_matching(text, pattern, tolerance):
     results.extend(sorted(unique_matches))
 
     return results
+
+# Read text from file (with chunking to handle large files)
+def read_file(file_path, chunk_size=1024*1024):  # 1MB chunks by default
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            while chunk := file.read(chunk_size):
+                yield chunk
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        return
+    except UnicodeDecodeError:
+        print("Error: File encoding issue encountered.")
+        return
+
 if __name__ == "__main__":
     pattern = input("Enter the pattern to search for: ")
     
