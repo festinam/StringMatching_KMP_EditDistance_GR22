@@ -27,3 +27,34 @@ def kmp_search(text, pattern):
             matches.append(i - j + 1)
             j = prefix_table[j - 1]
     return matches
+
+# Rabin-Karp Search function
+def rabin_karp_search(text, pattern):
+    prime = 101  # A prime number for hashing
+    m, n = len(pattern), len(text)
+    base = 256  # Base for ASCII characters
+    pattern_hash = 0
+    text_hash = 0
+    window_start = 0
+    matches = []
+
+    # Calculate the hash for the pattern
+    for i in range(m):
+        pattern_hash = (pattern_hash * base + ord(pattern[i])) % prime
+
+    # Calculate the initial hash for the first window of text
+    for i in range(m):
+        text_hash = (text_hash * base + ord(text[i])) % prime
+
+    # Rolling hash: slide the window across the text
+    for window_end in range(m, n + 1):
+        if pattern_hash == text_hash and text[window_start:window_end] == pattern:
+            matches.append(window_start)
+
+        # Slide the window: calculate the hash for the next window
+        if window_end < n:
+            text_hash = (base * (text_hash - ord(text[window_start]) * (base ** (m - 1))) + ord(text[window_end])) % prime
+            text_hash = text_hash if text_hash >= 0 else text_hash + prime
+            window_start += 1
+
+    return matches
