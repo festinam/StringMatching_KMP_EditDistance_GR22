@@ -91,3 +91,16 @@ def hybrid_string_matching(text, pattern, tolerance):
         substring = text[i:i + m]
         if edit_distance(pattern, substring) <= tolerance:
             approximate_matches.append(i)
+
+    # Combine results with match type
+    unique_matches = set()
+    results = []
+    for pos in exact_matches:
+        unique_matches.add((pos, "exact"))
+    for pos in rk_matches:
+        unique_matches.add((pos, "rabin-karp"))
+    for pos in approximate_matches:
+        unique_matches.add((pos, "approximate"))
+    results.extend(sorted(unique_matches))
+
+    return results
