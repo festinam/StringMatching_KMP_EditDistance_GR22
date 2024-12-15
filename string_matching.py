@@ -104,3 +104,28 @@ def hybrid_string_matching(text, pattern, tolerance):
     results.extend(sorted(unique_matches))
 
     return results
+if __name__ == "__main__":
+    pattern = input("Enter the pattern to search for: ")
+    
+    while True:
+        try:
+            tolerance = int(input("Enter the tolerance for approximate matching (integer): "))
+            if tolerance < 0:
+                raise ValueError("Tolerance must be non-negative.")
+            break
+        except ValueError as e:
+            print(f"Invalid input: {e}. Please enter a valid integer.")
+
+    file_path = input("Enter the file path to search in: ")
+
+    matches = []
+
+    for chunk in read_file(file_path):
+        matches.extend(hybrid_string_matching(chunk, pattern, tolerance))
+
+    if matches:
+        print("Matches found:")
+        for pos, match_type in matches:
+            print(f"Match found at position {pos}, Type: {match_type}")
+    else:
+        print("No matches found.")
