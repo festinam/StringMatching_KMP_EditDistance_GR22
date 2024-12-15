@@ -74,4 +74,20 @@ def edit_distance(s1, s2):
                 dp[i][j] = dp[i - 1][j - 1]
             else:
                 dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
-    return dp[m][n];
+    return dp[m][n]
+
+# Hybrid String Matching (KMP, Rabin-Karp, and Edit Distance)
+def hybrid_string_matching(text, pattern, tolerance):
+    # Step 1: Exact matching using KMP
+    exact_matches = kmp_search(text, pattern)
+
+    # Step 2: Matches using Rabin-Karp
+    rk_matches = rabin_karp_search(text, pattern)
+
+    # Step 3: Approximate matching using edit distance
+    approximate_matches = []
+    m = len(pattern)
+    for i in range(len(text) - m + 1):
+        substring = text[i:i + m]
+        if edit_distance(pattern, substring) <= tolerance:
+            approximate_matches.append(i)
